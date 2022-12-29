@@ -1,0 +1,87 @@
+# This is the SAM template that represents the architecture of your serverless application
+# https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-template-basics.html
+
+# The AWSTemplateFormatVersion identifies the capabilities of the template
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  idiothaus-valheim-backup
+
+# Transform section specifies one or more macros that AWS CloudFormation uses to process your template
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-section-structure.html
+Transform:
+- AWS::Serverless-2016-10-31
+
+Parameters:
+  S3BucketName:
+    Type: String
+    Description: S3 bucket upload backups
+  S3Key:
+    Type: String
+    Description: S3 Key prefix for files
+  SftpHost:
+    Type: String
+    Description: SFTP Host
+  SftpPort:
+    Type: String
+    Description: SFTP Port Number
+  SftpUsername:
+    Type: String
+    Description: SFTP Username
+  SftpPassword:
+    Type: String
+    Description: SFTP Password
+  SftpPath:
+    Type: String
+    Description: SFTP Path prefix for files
+
+# Resources declares the AWS resources that you want to include in the stack
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
+Resources:
+  # This is the Lambda function definition associated with the source code: sqs-payload-logger.js. For all available properties, see
+  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  ValheimBackupHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Lambda that transfers file from sftp to s3
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Handler: src/handlers/scheduled-event-logger.scheduledEventLoggerHandler
+      # This property associates this Lambda function with a scheduled CloudWatch Event. For all available properties, see
+      # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#schedule
+      # This example runs every day
+      Events:
+        CloudWatchEvent:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 0 * * ? *)
+      MemorySize: 128
+      Timeout: 300
+      Environment:
+        Variables:
+          S3_BUCKET:
+            Ref: S3BucketName
+          S3_KEY:
+            Ref: S3Key
+          SFTP_HOST:
+            Ref: SftpHost
+          SFTP_PORT:
+            Ref: SftpPort
+          SFTP_USERNAME:
+            Ref: SftpUsername
+          SFTP_PASSWORD:
+            Ref: SftpPassword
+          SFTP_PATH:
+            Ref: SftpPath
+      Policies:
+        - S3WritePolicy:
+            BucketName:
+              Ref: S3BucketName
+    # Metadata:
+    #   BuildMethod: esbuild
+    #   Minify: false
+    #   Sourcemap: true
+    #   EntryPoints:
+    #     - scheduled-event-logger.mjs
+
