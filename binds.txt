@@ -1,0 +1,2 @@
+// List of custom console binds ONE per line
+bind F8 say Server hosted by GTXGaming.co.uk
