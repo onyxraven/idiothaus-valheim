@@ -16,24 +16,24 @@ Parameters:
   S3BucketName:
     Type: String
     Description: S3 bucket upload backups
-  S3Key:
+  S3Prefix:
     Type: String
     Description: S3 Key prefix for files
-  SftpHost:
+  FtpHost:
     Type: String
-    Description: SFTP Host
-  SftpPort:
+    Description: FTP Host
+  FtpPort:
     Type: String
-    Description: SFTP Port Number
-  SftpUsername:
+    Description: FTP Port Number
+  FtpUsername:
     Type: String
-    Description: SFTP Username
-  SftpPassword:
+    Description: FTP Username
+  FtpPassword:
     Type: String
-    Description: SFTP Password
-  SftpPath:
+    Description: FTP Password
+  FtpPrefix:
     Type: String
-    Description: SFTP Path prefix for files
+    Description: FTP Path prefix for files
 
 # Resources declares the AWS resources that you want to include in the stack
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
@@ -62,18 +62,18 @@ Resources:
         Variables:
           S3_BUCKET:
             Ref: S3BucketName
-          S3_KEY:
-            Ref: S3Key
-          SFTP_HOST:
-            Ref: SftpHost
-          SFTP_PORT:
-            Ref: SftpPort
-          SFTP_USERNAME:
-            Ref: SftpUsername
-          SFTP_PASSWORD:
-            Ref: SftpPassword
-          SFTP_PATH:
-            Ref: SftpPath
+          S3_PREFIX:
+            Ref: S3Prefix
+          FTP_HOST:
+            Ref: FtpHost
+          FTP_PORT:
+            Ref: FtpPort
+          FTP_USERNAME:
+            Ref: FtpUsername
+          FTP_PASSWORD:
+            Ref: FtpPassword
+          FTP_PREFIX:
+            Ref: FtpPrefix
       Policies:
         - S3WritePolicy:
             BucketName:

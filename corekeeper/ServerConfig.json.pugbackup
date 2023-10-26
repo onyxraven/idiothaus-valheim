@@ -1,0 +1,11 @@
+{
+    "gameId": "shUh8WKAeJEMWZar5Gu5sIF5iVVk",
+    "world": 1,
+    "worldName": "World",
+    "worldSeed": 0,
+    "maxNumberPlayers": 6,
+    "maxNumberPacketsSentPerFrame": 1,
+    "networkSendRate": 30,
+    "worldMode": 1,
+    "seasonOverride": -1
+}
